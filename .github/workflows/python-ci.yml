@@ -5,7 +5,8 @@
   on: [push]
   
   # Defines the jobs to be run in this workflow.
-  jobs: build:
+  jobs: 
+    build:
     	# Specifies the runner environment where the job will execute. 
       # In this case, it runs on the latest version of Ubuntu.
       runs-on: ubuntu-latest
