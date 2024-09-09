@@ -1,0 +1,40 @@
+  name: Python CI # Name of the workflow
+  
+  # Defines when the workflow should run. 
+  # This workflow triggers on every push event to the repository.
+  on: [push]
+  
+  # Defines the jobs to be run in this workflow.
+  jobs: build:
+    	# Specifies the runner environment where the job will execute. 
+      # In this case, it runs on the latest version of Ubuntu.
+      runs-on: ubuntu-latest
+      
+      # Strategy block for setting up a build matrix. 
+      strategy:
+        # A matrix allows you to create multiple versions of a job under different conditions.
+        matrix:
+          # Specifies a list of Python versions to be used for testing. 
+          # Each version specified here will trigger a separate job instance.
+          python-version: ["3.7", "3.8", "3.9","3.10"]
+          
+      # Defines the steps to be performed as part of this job.
+      steps:
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your workflow can access it.
+      - uses: actions/checkout@v2
+      # Sets up a Python environment according to the version specified in the matrix.
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+       # Installs dependencies required for the project to run.    
+      - name: Install dependencies
+        run: |
+        # It first upgrades pip and then installs any packages specified in a requirements.txt file, if it exists.
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          
+      # Runs unit tests using Python’s unittest framework on a specific test file.
+      - name: Run tests
+        run: |
+          python -m unittest myTest.py # The test script you want to run
